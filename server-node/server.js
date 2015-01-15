@@ -8,12 +8,10 @@ var User = require('./models/user');
 var port = 5678;
 var app = express();
 
-app.use(bodyParser.json());
+app.use(express.static(__dirname + '/../angular'));
 
-app.use('/', require('./controllers/personal'));
-app.use('/sessions', require('./controllers/sessions'));
-app.use('/users', require('./controllers/users'));
-app.use('/projects', require('./controllers/projects'));
+app.use(bodyParser.json());
+app.use('/api', require('./controllers'));
 
 app.listen(port);
 console.log('app listening on port: ' + port);
