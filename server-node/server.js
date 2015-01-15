@@ -1,22 +1,19 @@
+global.jwtSecret = 'peanutbutterjelly';
+
 var express = require('express');
 var bodyParser = require('body-parser');
+var Project = require('./models/project');
+var User = require('./models/user');
 
 var port = 5678;
-
 var app = express();
 
 app.use(bodyParser.json());
 
-app.get('/', function (req, res) {
-    return res.json({message: 'Hello'});
-});
-
-app.get('/projects', function (req, res) {
-    return res.json([
-        {name: 'Project 1', members: ['Frank', 'Martin']},
-        {name: 'Project 2', members: ['Martin']}
-    ]);
-});
+app.use('/', require('./controllers/personal'));
+app.use('/sessions', require('./controllers/sessions'));
+app.use('/users', require('./controllers/users'));
+app.use('/projects', require('./controllers/projects'));
 
 app.listen(port);
 console.log('app listening on port: ' + port);
