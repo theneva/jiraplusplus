@@ -1,0 +1,21 @@
+{
+  "name": "angular",
+  "version": "0.0.1",
+  "homepage": "https://github.com/theneva/jiraplusplus",
+  "authors": [
+    "Martin Lehmann <lehmar11@student.westerdals.no>"
+  ],
+  "main": "index.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.1",
+    "angular": "~1.3.9"
+  }
+}
