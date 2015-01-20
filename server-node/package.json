@@ -1,7 +1,7 @@
 {
   "name": "jiraplusplus",
   "scripts": {
-    "prestart": "npm install; cd ../angular/; bower install",
+    "prestart": "npm install; cd ../angular/; ../server-node/node_modules/bower/bin/bower install",
     "start": "node server.js"
   },
   "dependencies": {
