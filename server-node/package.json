@@ -1,5 +1,8 @@
 {
   "name": "jiraplusplus",
+  "scripts": {
+    "start": "cd ../angular && bower install && cd ../server-node && node server.js"
+  },
   "dependencies": {
     "bcrypt": "^0.8.0",
     "body-parser": "^1.10.1",
