@@ -1,4 +1,5 @@
 var router = require('express').Router();
+var jwt = require('jwt-simple');
 var bcrypt = require('bcrypt');
 var User = require('../models/user');
 
@@ -21,6 +22,18 @@ router.post('/', function (req, res, next) {
             if (err) return next(err);
             res.json(201, user);
         });
+    });
+});
+
+router.get('/:username', function(req, res, next) {
+    var username = req.params.username;
+    User.findOne({username: username}, function(err, user) { // TODO
+        if (err) next(err);
+        if (!user) {
+            return res.status(404).send('No user with username \'' + username + '\'');
+        }
+
+        res.json(user);
     });
 });
 

@@ -24,4 +24,13 @@ router.post('/', function (req, res, next) {
     });
 });
 
+router.get('/:projectId', function(req, res, next) {
+    var projectId = req.params.projectId;
+
+    Project.findOne({_id: projectId}, function(err, project) {
+        if (err) return next(err);
+        res.json(200, project);
+    });
+});
+
 module.exports = router;

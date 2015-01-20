@@ -1,13 +1,47 @@
 <!doctype html>
-<html lang="en" ng-app>
+<html lang="en" ng-app="jiraplusplus">
 <head>
     <meta charset="UTF-8">
     <title>Jira++</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
     <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="js/controllers.js"></script>
 </head>
-<body>
+<body ng-controller="ProjectsController">
 <h1>JIRA++</h1>
-<input type="text" ng-model="name"/>
-<h3>Hello {{name}}</h3>
+
+<div id="projects">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="inputProjectFilter" class="col-sm-2 control-label">Filter projects</label>
+
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="inputProjectFilter" placeholder="Query"
+                       ng-model="projectFilter">
+            </div>
+        </div>
+    </form>
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>Name</th>
+            <th>Members</th>
+        </tr>
+        <tr ng-repeat="project in projects | filter:projectFilter">
+            <td>
+                <a href="/api/projects/{{project._id}}">{{project.name}}</a>
+            </td>
+            <td>
+                <span class="members" ng-repeat="member in project.members">
+                        <a href="/api/users/{{member}}">
+                            <span class="btn btn-default member">{{member}}</span>
+                        </a>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

@@ -13,7 +13,7 @@ router.get('/user', function (req, res, next) {
         return res.status(401).send('No token supplied');
     }
 
-    var jwtUser = jwt.decode(token, jwtSecret);
+    var jwtUser = jwt.decode(token, global.jwtSecret);
 
     User.findOne({username: jwtUser.username}, function (err, user) {
         if (err) return next(err);

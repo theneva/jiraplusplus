@@ -8,7 +8,7 @@ router.post('/', function (req, res, next) {
         return res.status(401).send('Request must contain username and password');
     }
 
-    User.findOne({username: req.body.username}, function (err, user) {
+    User.findOne({username: req.body.username}, '+password', function (err, user) {
         if (err) return next(err);
 
         bcrypt.compare(req.body.password, user.password, function (err, valid) {
