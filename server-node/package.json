@@ -1,7 +1,8 @@
 {
   "name": "jiraplusplus",
   "scripts": {
-    "start": "cd ../angular && bower install && cd ../server-node && node server.js"
+    "prestart": "npm install; cd ../angular/; bower install",
+    "start": "node server.js"
   },
   "dependencies": {
     "bcrypt": "^0.8.0",
@@ -11,6 +12,7 @@
     "jwt-simple": "^0.2.0",
     "lodash": "^2.4.1",
     "mongoose": "^3.8.21",
-    "nodemon": "^1.2.1"
+    "nodemon": "^1.2.1",
+    "bower": ""
   }
 }
