@@ -1,0 +1,29 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label for="inputProjectFilter" class="col-sm-2 control-label">Filter users</label>
+
+        <div class="col-sm-4">
+            <input type="text" class="form-control" id="inputProjectFilter" placeholder="Query"
+                   ng-model="userFilter">
+        </div>
+    </div>
+</form>
+
+<table class="table">
+    <tbody>
+    <tr>
+        <th>_id</th>
+        <th>username</th>
+    </tr>
+    <tr ng-repeat="user in users | filter:userFilter">
+        <td>
+            <a href="/#/users/{{user.username}}">{{user._id}}</a>
+        </td>
+        <td>
+            <a href="/#/users/{{user.username}}">
+                <span class="btn btn-default">{{user.username}}</span>
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>

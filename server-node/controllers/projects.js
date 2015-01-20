@@ -29,7 +29,7 @@ router.get('/:projectId', function(req, res, next) {
 
     Project.findOne({_id: projectId}, function(err, project) {
         if (err) return next(err);
-        res.json(200, project);
+        res.status(200).json(project);
     });
 });
 

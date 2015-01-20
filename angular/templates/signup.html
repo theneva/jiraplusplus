@@ -1,0 +1,17 @@
+<h1>Sign up</h1>
+
+<form class="form-horizontal">
+    <div class="form-group">
+        <label for="inputUsername">Username</label>
+        <input type="text" class="form-control" id="inputUsername" pattern=".+" ng-model="username"/>
+    </div>
+    <div class="form-group">
+        <label for="inputPassword">Password</label>
+        <input type="password" class="form-control" id="inputPassword" pattern="(.){6,}" ng-model="password"/>
+    </div>
+    <div class="form-group">
+        <label for="inputPasswordConfirmation">Confirm password</label>
+        <input type="password" class="form-control" id="inputPasswordConfirmation" pattern="{{password}}" ng-model="passwordConfirmation"/>
+    </div>
+    <button type="submit" class="btn btn-default" ng-click="signup(username, password, passwordConfirmation)">Sign up</button>
+</form>
