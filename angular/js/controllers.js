@@ -9,14 +9,18 @@ app.controller('PersonalController', function ($scope, ProjectService) {
         });
 });
 
-app.controller('SignupController', function ($scope, UserService) {
+app.controller('SignupController', function ($scope, $location, UserService) {
     $scope.signup = function (username, password, passwordConfirmation) {
         if (password !== passwordConfirmation) {
             // TODO: Flash error
             return;
         }
 
-        UserService.signup(username, password);
+        UserService.signup(username, password)
+            .success(function(user) {
+                $location.path('/users/' + user.username);
+                $location.replace();
+            });
     }
 });
 
@@ -30,7 +34,7 @@ app.service('UserService', function ($http) {
     };
 
     this.signup = function (username, password) {
-        $http.post('/api/users', JSON.stringify({username: username, password: password}));
+        return $http.post('/api/users', JSON.stringify({username: username, password: password}));
     }
 });
 
