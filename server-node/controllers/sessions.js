@@ -10,6 +10,7 @@ router.post('/', function (req, res, next) {
 
     User.findOne({username: req.body.username}, '+password', function (err, user) {
         if (err) return next(err);
+        if (!user) return res.status(401).send('No user found with username \'' + req.body.username + '\'');
 
         bcrypt.compare(req.body.password, user.password, function (err, valid) {
             if (err) next(err);
