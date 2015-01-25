@@ -64,4 +64,9 @@ router.get('/:projectId', function (req, res, next) {
     });
 });
 
+router.get('/:projectId/issues', function(req, res) {
+    var projectId = req.params.projectId;
+    return res.send('hi ' + projectId);
+});
+
 module.exports = router;

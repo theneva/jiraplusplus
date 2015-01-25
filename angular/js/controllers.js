@@ -89,7 +89,7 @@ app.controller('LoginController', function ($scope, $location, SessionService, P
 
 app.service('SessionService', function ($http) {
     this.login = function (username, password) {
-        return $http.post('/api/sessions', JSON.stringify({username: username, password: password}));
+        return $http.post('/api/sessions', {username: username, password: password});
     }
 });
 
@@ -103,7 +103,7 @@ app.service('UserService', function ($http) {
     };
 
     this.signup = function (username, password) {
-        return $http.post('/api/users', JSON.stringify({username: username, password: password}));
+        return $http.post('/api/users', {username: username, password: password});
     }
 });
 
@@ -118,6 +118,20 @@ app.service('ProjectService', function ($http) {
 
     this.newProject = function(newProjectName) {
         return $http.post('/api/projects/', {name: newProjectName});
+    }
+});
+
+app.service('IssueService', function ($http) {
+    this.getIssues = function() {
+        return $http.get('/api/issues');
+    }
+
+    this.getIssue = function(projectId, issueId) {
+        return $http.get('/api/projects/' + projectId + '/issues/' + id);
+    }
+
+    this.newIssue = function(projectId, issueName) {
+        return $http.post('/api/projects/' + projectId + '/issues/', {name: issueName});
     }
 });
 
