@@ -161,6 +161,7 @@ app.controller('ProjectsController', function ($scope, ProjectService) {
         ProjectService.newProject(projectId)
             .success(function (project) {
                 $scope.projects.push(project);
+                $scope.newProjectName = "";
             });
     };
 
