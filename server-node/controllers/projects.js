@@ -1,8 +1,18 @@
 var router = require('express').Router();
+var jwt = require('jwt-simple');
 var Project = require('../models/project');
+var _ = require('underscore');
 
 router.get('/', function (req, res, next) {
-    Project.find({}, function (err, projects) {
+    var token = req.headers['x-auth'];
+    
+    if (!token) {
+        return res.status(401).send('No token supplied');
+    }
+
+    var jwtUser = jwt.decode(token, global.jwtSecret);
+
+    Project.find({members: jwtUser.username}, function (err, projects) {
         if (err) return next(err);
         res.json(projects);
     });
@@ -25,11 +35,24 @@ router.post('/', function (req, res, next) {
 });
 
 router.get('/:projectId', function (req, res, next) {
+    var token = req.headers['x-auth'];
+
+    if (!token) {
+        return res.status(401).send('No token supplied');
+    }
+
+    var jwtUser = jwt.decode(token, global.jwtSecret);
+
     var projectId = req.params.projectId;
 
     Project.findOne({_id: projectId}, function (err, project) {
         if (err) return next(err);
-        res.status(200).json(project);
+
+        if (!_.contains(project.members, jwtUser.username)) {
+            return res.status(401).send('The user \'' + jwtUser.username + '\' does not have access to this project');
+        }
+
+        return res.status(200).json(project);
     });
 });
 

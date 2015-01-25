@@ -1,5 +1,3 @@
-<h1>JIRA++</h1>
-
 <div id="projects">
     <form class="form-horizontal">
         <div class="form-group">
@@ -19,7 +17,7 @@
         </tr>
         <tr ng-repeat="project in projects | filter:projectFilter">
             <td>
-                <a href="/api/projects/{{project._id}}">{{project.name}}</a>
+                <a href="/#/projects/{{project._id}}">{{project.name}}</a>
             </td>
             <td>
                 <span class="members" ng-repeat="member in project.members">

@@ -3,7 +3,7 @@ var app = angular.module('jiraplusplus', [
 ]);
 
 app.config(function ($httpProvider) {
-    $httpProvider.defaults.headers.common['X-Auth'] = localStorage.getItem('jwt');
+    $httpProvider.defaults.headers.common['X-Auth'] = localStorage.getItem('jwt') || '';
 });
 
 app.controller('ApplicationController', function ($scope, PersonalService) {
@@ -28,6 +28,11 @@ app.controller('PersonalController', function ($scope, ProjectService) {
     ProjectService.getProjects()
         .success(function (projects) {
             $scope.projects = projects;
+        })
+        .error(function(data, status) {
+            if (status === 401) {
+                $scope.error = 'No projects to display; please log in.';
+            }
         });
 });
 
@@ -99,6 +104,10 @@ app.service('ProjectService', function ($http) {
     this.getProjects = function () {
         return $http.get('/api/projects');
     };
+
+    this.getProject = function(projectId) {
+        return $http.get('/api/projects/' + projectId);
+    }
 });
 
 app.controller('UsersController', function ($scope, $http, UserService) {
@@ -114,5 +123,19 @@ app.controller('UserController', function ($scope, $http, $routeParams, UserServ
     UserService.getUser(username)
         .success(function (user) {
             $scope.user = user;
+        });
+});
+
+app.controller('ProjectsController', function($scope, ProjectService) {
+    ProjectService.getProjects()
+        .success(function(projects) {
+            $scope.projects = projects;
+        });
+});
+
+app.controller('ProjectController', function($scope, $routeParams, ProjectService) {
+    ProjectService.getProject($routeParams.projectId)
+        .success(function(project) {
+            $scope.project = project;
         });
 });
