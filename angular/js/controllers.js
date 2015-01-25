@@ -1,5 +1,6 @@
 var app = angular.module('jiraplusplus', [
-    'ngRoute'
+    'ngRoute',
+    'jiraplusplusServices'
 ]);
 
 app.config(function ($httpProvider) {
@@ -24,31 +25,17 @@ app.controller('ApplicationController', function ($scope, PersonalService) {
     }
 });
 
-app.controller('PersonalController', function ($scope, ProjectService) {
-    ProjectService.getProjects()
-        .success(function (projects) {
-            $scope.projects = projects;
-        })
-        .error(function (data, status) {
-            if (status === 401) {
-                $scope.error = 'No projects to display; please log in.';
-            }
-        });
-
-    $scope.newProject = function (newProjectName) {
-        ProjectService.newProject(newProjectName)
-            .success(function (createdProject) {
-                console.log('pushing ' + createdProject);
-                $scope.projects.push(createdProject);
-            });
-    }
+app.controller('PersonalController', function ($scope, Project) {
+    
+    Project.query({}, function(res) {
+        $scope.projects = res.data;
+    }, function (res) {
+        if (res.status === 401) {
+            $scope.error = 'No projects to display; please log in.';
+        }
+    });
 });
 
-app.service('PersonalService', function ($http) {
-    this.getUser = function () {
-        return $http.get('/api/user');
-    }
-});
 
 app.controller('SignupController', function ($scope, $location, UserService, SessionService) {
     $scope.signup = function (username, password, passwordConfirmation) {
@@ -88,62 +75,6 @@ app.controller('LoginController', function ($scope, $location, SessionService, P
     };
 });
 
-app.service('SessionService', function ($http) {
-    this.login = function (username, password) {
-        return $http.post('/api/sessions', {username: username, password: password});
-    }
-});
-
-app.service('UserService', function ($http) {
-    this.getUsers = function () {
-        return $http.get('/api/users');
-    };
-
-    this.getUser = function (username) {
-        return $http.get('/api/users/' + username);
-    };
-
-    this.signup = function (username, password) {
-        return $http.post('/api/users', {username: username, password: password});
-    }
-});
-
-app.service('ProjectService', function ($http) {
-    this.getProjects = function () {
-        return $http.get('/api/projects');
-    };
-
-    this.getProject = function (projectId) {
-        return $http.get('/api/projects/' + projectId);
-    };
-
-    this.newProject = function (newProjectName) {
-        return $http.post('/api/projects/', {name: newProjectName});
-    };
-
-    this.deleteProject = function (projectId) {
-        return $http.delete('/api/projects/' + projectId);
-    };
-});
-
-app.service('IssueService', function ($http) {
-    this.getIssues = function () {
-        return $http.get('/api/issues');
-    };
-
-    this.getIssue = function (projectId, issueId) {
-        return $http.get('/api/projects/' + projectId + '/issues/' + id);
-    };
-
-    this.newIssue = function (projectId, issueName) {
-        return $http.post('/api/projects/' + projectId + '/issues/', {name: issueName});
-    };
-
-    this.deleteIssue = function (projectId, issueId) {
-        return $http.delete('/api/projects/' + projectId + '/issues/' + issueId);
-    };
-});
-
 app.controller('UsersController', function ($scope, $http, UserService) {
     UserService.getUsers()
         .success(function (users) {
@@ -160,35 +91,28 @@ app.controller('UserController', function ($scope, $http, $routeParams, UserServ
         });
 });
 
-app.controller('ProjectsController', function ($scope, ProjectService) {
+app.controller('ProjectsController', function ($scope, Project) {
     $scope.newProject = function (projectId) {
-        ProjectService.newProject(projectId)
-            .success(function (project) {
-                $scope.projects.push(project);
-                $scope.newProjectName = "";
-            });
+        var project = new Project({name: projectId});
+        project.$save();
+
+        $scope.projects.push(project);
+        $scope.newProjectName = '';
     };
 
     $scope.deleteProject = function (projectId) {
-        ProjectService.deleteProject(projectId)
-            .success(function () {
-                $scope.projects = _.reject($scope.projects, function (project) {
-                    return project._id === projectId;
-                });
-            });
+        Project.delete({id: projectId});
+
+        $scope.projects = _.reject($scope.projects, function (project) {
+            return project._id === projectId;
+        });
     };
 
-    ProjectService.getProjects()
-        .success(function (projects) {
-            $scope.projects = projects;
-        });
+    $scope.projects = Project.query();
 });
 
-app.controller('ProjectController', function ($scope, $routeParams, ProjectService, IssueService) {
-    ProjectService.getProject($routeParams.projectId)
-        .success(function (project) {
-            $scope.project = project;
-        });
+app.controller('ProjectController', function ($scope, $routeParams, Project, IssueService) {
+    $scope.project = Project.get({id: $routeParams.projectId});
 
     $scope.newIssue = function (issueName) {
         IssueService.newIssue($routeParams.projectId, issueName)
