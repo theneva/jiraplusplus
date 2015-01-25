@@ -1,2 +1,40 @@
-<h1>{{project.name}}</h1>
-{{project}}
+<div id="project">
+	<h1>{{project.name}}</h1>
+	{{project}}
+
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="inputIssueFilter" class="col-sm-2 control-label">Filter issues</label>
+
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="inputIssueFilter" placeholder="Query"
+                       ng-model="issueFilter" />
+            </div>
+        </div>
+    </form>
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>Name</th>
+            <th>Members</th>
+        </tr>
+        <tr ng-repeat="issue in issues | filter:issueFilter">
+            <td>
+                <a href="/#/projects/{{project._id}}">{{project.name}}</a>
+            </td>
+            <td>
+                <span class="members" ng-repeat="member in project.members">
+                        <a href="/#/users/{{member}}">
+                            <span class="btn btn-default member">{{member}}</span>
+                        </a>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <form ng-submit="newIssue(newIssueName)">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="New issue" ng-model="newIssueName"/>
+        </div>
+    </form>
+</div>

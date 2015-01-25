@@ -25,11 +25,11 @@ router.post('/', function (req, res, next) {
         return res.status(401).send('No token supplied');
     }
 
-    var jwtUser = jwt.decode(token, global.jwtSecret);
-
     if (!req.body.name) {
         return res.status(401).send('Request must contain name');
-    }
+    }   
+
+    var jwtUser = jwt.decode(token, global.jwtSecret);
 
     var project = new Project({
         name: req.body.name,
