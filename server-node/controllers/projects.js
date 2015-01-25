@@ -99,11 +99,6 @@ router.delete('/:projectId', function (req, res, next) {
     });
 });
 
-router.get('/:projectId/issues', function (req, res) {
-    var projectId = req.params.projectId;
-    return res.send('hi ' + projectId);
-});
-
 router.post('/:projectId/issues', function (req, res, next) {
     Project.findByIdAndUpdate(
         req.params.projectId,
@@ -114,6 +109,23 @@ router.post('/:projectId/issues', function (req, res, next) {
             res.status(201).json(project);
         }
     );
+});
+
+router.delete('/:projectId/issues/:issueId', function (req, res, next) {
+    Project.findOne(req.params.projectId, function (err, project) {
+        if (err) return next(err);
+
+        if (!project) {
+            return res.status(404).send('No project found with id  \'' + projectId + '\'');
+        }
+
+        project.issues.pull({_id: req.params.issueId});
+
+        project.save(function (err) {
+            if (err) return next(err);
+            return res.status(204).send();
+        })
+    });
 });
 
 module.exports = router;

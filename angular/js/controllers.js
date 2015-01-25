@@ -129,14 +129,18 @@ app.service('ProjectService', function ($http) {
 app.service('IssueService', function ($http) {
     this.getIssues = function () {
         return $http.get('/api/issues');
-    }
+    };
 
     this.getIssue = function (projectId, issueId) {
         return $http.get('/api/projects/' + projectId + '/issues/' + id);
-    }
+    };
 
     this.newIssue = function (projectId, issueName) {
         return $http.post('/api/projects/' + projectId + '/issues/', {name: issueName});
+    };
+
+    this.deleteIssue = function (projectId, issueId) {
+        return $http.delete('/api/projects/' + projectId + '/issues/' + issueId);
     };
 });
 
@@ -188,8 +192,17 @@ app.controller('ProjectController', function ($scope, $routeParams, ProjectServi
 
     $scope.newIssue = function (issueName) {
         IssueService.newIssue($routeParams.projectId, issueName)
-            .success(function(issue) {
+            .success(function (issue) {
                 // TODO bind the new issue to the project.
             });
     };
+
+    $scope.deleteIssue = function (issueId) {
+        console.log('deleteIssue called');
+
+        IssueService.deleteIssue($routeParams.projectId, issueId)
+            .success(function () {
+                // TODO bind the removal to the project.
+            });
+    }
 });
