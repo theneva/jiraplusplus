@@ -5,7 +5,7 @@
 
             <div class="col-sm-4">
                 <input type="text" class="form-control" id="inputProjectFilter" placeholder="Query"
-                       ng-model="projectFilter">
+                       ng-model="projectFilter" />
             </div>
         </div>
     </form>
@@ -29,4 +29,9 @@
         </tr>
         </tbody>
     </table>
+    <form ng-submit="newProject(newProjectName)">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="New project by name" ng-model="newProjectName"/>
+        </div>
+    </form>
 </div>

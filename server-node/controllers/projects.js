@@ -19,13 +19,21 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
-    if (!req.body.name || !req.body.members) {
-        return res.status(401).send('Request must contain name and members');
+    var token = req.headers['x-auth'];
+
+    if (!token) {
+        return res.status(401).send('No token supplied');
+    }
+
+    var jwtUser = jwt.decode(token, global.jwtSecret);
+
+    if (!req.body.name) {
+        return res.status(401).send('Request must contain name');
     }
 
     var project = new Project({
         name: req.body.name,
-        members: req.body.members
+        members: [jwtUser.username]
     });
 
     project.save(function (err, project) {

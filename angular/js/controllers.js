@@ -34,6 +34,13 @@ app.controller('PersonalController', function ($scope, ProjectService) {
                 $scope.error = 'No projects to display; please log in.';
             }
         });
+
+        $scope.newProject = function(newProjectName) {
+            ProjectService.newProject(newProjectName)
+                .success(function(createdProject) {
+                    $scope.projects.push(createdProject);
+                });
+        }
 });
 
 app.service('PersonalService', function ($http) {
@@ -107,6 +114,10 @@ app.service('ProjectService', function ($http) {
 
     this.getProject = function(projectId) {
         return $http.get('/api/projects/' + projectId);
+    }
+
+    this.newProject = function(newProjectName) {
+        return $http.post('/api/projects/', {name: newProjectName});
     }
 });
 
