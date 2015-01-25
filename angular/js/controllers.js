@@ -198,8 +198,6 @@ app.controller('ProjectController', function ($scope, $routeParams, ProjectServi
     };
 
     $scope.deleteIssue = function (issueId) {
-        console.log('deleteIssue called');
-
         IssueService.deleteIssue($routeParams.projectId, issueId)
             .success(function () {
                 // TODO bind the removal to the project.
