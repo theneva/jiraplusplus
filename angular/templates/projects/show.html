@@ -1,33 +1,34 @@
 <div id="project">
-	<h1>{{project.name}}</h1>
-	{{project}}
+    <h1>{{project.name}}</h1>
 
-    <form class="form-horizontal">
-        <div class="form-group">
-            <label for="inputIssueFilter" class="col-sm-2 control-label">Filter issues</label>
-
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="inputIssueFilter" placeholder="Query"
-                       ng-model="issueFilter" />
-            </div>
-        </div>
-    </form>
+    <h3>Members</h3>
+    <a href="/#/projects/{{project._id}}">{{project.name}}</a>
+    <span class="members" ng-repeat="member in project.members">
+        <a href="/#/users/{{member}}">
+            <span class="btn btn-default member">{{member}}</span>
+        </a>
+    </span>
+    <hr/>
     <table class="table">
         <tbody>
         <tr>
             <th>Name</th>
-            <th>Members</th>
+            <th>Assignee</th>
+            <th>Delete</th>
         </tr>
-        <tr ng-repeat="issue in issues | filter:issueFilter">
+        <tr ng-repeat="issue in project.issues | filter:issueFilter">
             <td>
-                <a href="/#/projects/{{project._id}}">{{project.name}}</a>
+                <a href="/#/projects/{{project._id}}">{{issue.name}}</a>
             </td>
             <td>
-                <span class="members" ng-repeat="member in project.members">
-                        <a href="/#/users/{{member}}">
-                            <span class="btn btn-default member">{{member}}</span>
-                        </a>
+                <span class="member">
+                    <a href="/#/users/{{member}}">
+                        <span class="btn btn-default member">{{issue.assigneee}}</span>
+                    </a>
                 </span>
+            </td>
+            <td>
+                <button class="btn btn-danger" ng-click="deleteIssue(issue._id)">Delete</button>
             </td>
         </tr>
         </tbody>

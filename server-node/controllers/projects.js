@@ -6,7 +6,7 @@ var _ = require('underscore');
 
 router.get('/', function (req, res, next) {
     var token = req.headers['x-auth'];
-    
+
     if (!token) {
         return res.status(401).send('No token supplied');
     }
@@ -28,13 +28,14 @@ router.post('/', function (req, res, next) {
 
     if (!req.body.name) {
         return res.status(401).send('Request must contain name');
-    }   
+    }
 
     var jwtUser = jwt.decode(token, global.jwtSecret);
 
     var project = new Project({
         name: req.body.name,
-        members: [jwtUser.username]
+        members: [jwtUser.username],
+        issues: []
     });
 
     project.save(function (err, project) {
@@ -69,7 +70,7 @@ router.get('/:projectId', function (req, res, next) {
     });
 });
 
-router.delete('/:projectId', function(req, res, next) {
+router.delete('/:projectId', function (req, res, next) {
     var token = req.headers['x-auth'];
 
     if (!token) {
@@ -98,19 +99,17 @@ router.delete('/:projectId', function(req, res, next) {
     });
 });
 
-router.get('/:projectId/issues', function(req, res) {
+router.get('/:projectId/issues', function (req, res) {
     var projectId = req.params.projectId;
     return res.send('hi ' + projectId);
 });
 
-router.post('/:projectId/issues/', function (req, res, next) {
-    Project.findOneAndUpdate(
-        {_id: req.params.projectId},
-        {$push: {
-            issues: {name: req.body.name}
-        }},
+router.post('/:projectId/issues', function (req, res, next) {
+    Project.findByIdAndUpdate(
+        req.params.projectId,
+        {$push: {issues: {name: req.body.name}}},
         {safe: true, upsert: true},
-        function(err, project) {
+        function (err, project) {
             if (err) return next(err);
             res.status(201).json(project);
         }

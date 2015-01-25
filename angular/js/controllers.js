@@ -187,6 +187,9 @@ app.controller('ProjectController', function ($scope, $routeParams, ProjectServi
         });
 
     $scope.newIssue = function (issueName) {
-        IssueService.newIssue($routeParams.projectId, issueName);
+        IssueService.newIssue($routeParams.projectId, issueName)
+            .success(function(issue) {
+                // TODO bind the new issue to the project.
+            });
     };
 });
