@@ -74,8 +74,8 @@ app.controller('LoginController', function ($scope, $location, SessionService, P
                         $scope.$emit('login', user);
                     });
             })
-            .error(function (data, status) {
-                // TODO: Flash error
+            .error(function (message) {
+                $scope.error = message;
             });
     };
 });
