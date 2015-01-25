@@ -1,6 +1,6 @@
 var app = angular.module('jiraplusplus', [
     'ngRoute'
-]);
+    ]);
 
 app.config(function ($httpProvider) {
     $httpProvider.defaults.headers.common['X-Auth'] = localStorage.getItem('jwt') || '';
@@ -18,29 +18,29 @@ app.controller('ApplicationController', function ($scope, PersonalService) {
 
     if (localStorage.getItem('jwt') && !$scope.currentUser) {
         PersonalService.getUser()
-            .success(function (user) {
-                $scope.$emit('login', user);
-            });
+        .success(function (user) {
+            $scope.$emit('login', user);
+        });
     }
 });
 
 app.controller('PersonalController', function ($scope, ProjectService) {
     ProjectService.getProjects()
-        .success(function (projects) {
-            $scope.projects = projects;
-        })
-        .error(function(data, status) {
-            if (status === 401) {
-                $scope.error = 'No projects to display; please log in.';
-            }
-        });
-
-        $scope.newProject = function(newProjectName) {
-            ProjectService.newProject(newProjectName)
-                .success(function(createdProject) {
-                    $scope.projects.push(createdProject);
-                });
+    .success(function (projects) {
+        $scope.projects = projects;
+    })
+    .error(function(data, status) {
+        if (status === 401) {
+            $scope.error = 'No projects to display; please log in.';
         }
+    });
+
+    $scope.newProject = function(newProjectName) {
+        ProjectService.newProject(newProjectName)
+        .success(function(createdProject) {
+            $scope.projects.push(createdProject);
+        });
+    }
 });
 
 app.service('PersonalService', function ($http) {
@@ -57,33 +57,33 @@ app.controller('SignupController', function ($scope, $location, UserService, Ses
         }
 
         UserService.signup(username, password)
-            .success(function (user) {
-                SessionService.login(username, password)
-                    .success(function (jwt) {
-                        localStorage.setItem('jwt', jwt);
-                        $location.path('/users/' + user.username);
-                        $location.replace();
-                    });
+        .success(function (user) {
+            SessionService.login(username, password)
+            .success(function (jwt) {
+                localStorage.setItem('jwt', jwt);
+                $location.path('/users/' + user.username);
+                $location.replace();
             });
+        });
     }
 });
 
 app.controller('LoginController', function ($scope, $location, SessionService, PersonalService) {
     $scope.login = function (username, password) {
         SessionService.login(username, password)
-            .success(function (jwt) {
-                localStorage.setItem('jwt', jwt);
+        .success(function (jwt) {
+            localStorage.setItem('jwt', jwt);
 
-                PersonalService.getUser(jwt)
-                    .success(function (user) {
-                        $location.path('/');
-                        $location.replace();
-                        $scope.$emit('login', user);
-                    });
-            })
-            .error(function (message) {
-                $scope.error = message;
+            PersonalService.getUser(jwt)
+            .success(function (user) {
+                $location.path('/');
+                $location.replace();
+                $scope.$emit('login', user);
             });
+        })
+        .error(function (message) {
+            $scope.error = message;
+        });
     };
 });
 
@@ -114,53 +114,49 @@ app.service('ProjectService', function ($http) {
 
     this.getProject = function(projectId) {
         return $http.get('/api/projects/' + projectId);
-    }
+    };
 
     this.newProject = function(newProjectName) {
         return $http.post('/api/projects/', {name: newProjectName});
-    }
+    };
 });
 
 app.service('IssueService', function ($http) {
-    this.getIssues = function() {
-        return $http.get('/api/issues');
-    }
-
-    this.getIssue = function(projectId, issueId) {
-        return $http.get('/api/projects/' + projectId + '/issues/' + id);
-    }
-
     this.newIssue = function(projectId, issueName) {
         return $http.post('/api/projects/' + projectId + '/issues/', {name: issueName});
-    }
+    };
 });
 
 app.controller('UsersController', function ($scope, $http, UserService) {
     UserService.getUsers()
-        .success(function (users) {
-            $scope.users = users;
-        });
+    .success(function (users) {
+        $scope.users = users;
+    });
 });
 
 app.controller('UserController', function ($scope, $http, $routeParams, UserService) {
     var username = $routeParams.username;
 
     UserService.getUser(username)
-        .success(function (user) {
-            $scope.user = user;
-        });
+    .success(function (user) {
+        $scope.user = user;
+    });
 });
 
 app.controller('ProjectsController', function($scope, ProjectService) {
     ProjectService.getProjects()
-        .success(function(projects) {
-            $scope.projects = projects;
-        });
+    .success(function(projects) {
+        $scope.projects = projects;
+    });
 });
 
-app.controller('ProjectController', function($scope, $routeParams, ProjectService) {
+app.controller('ProjectController', function($scope, $routeParams, ProjectService, IssueService) {
     ProjectService.getProject($routeParams.projectId)
-        .success(function(project) {
-            $scope.project = project;
-        });
+    .success(function(project) {
+        $scope.project = project;
+    });
+
+    $scope.newIssue = function(issueName) {
+        IssueService.newIssue($routeParams.projectId, issueName);
+    };
 });

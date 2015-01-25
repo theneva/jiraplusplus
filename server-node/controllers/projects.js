@@ -1,6 +1,7 @@
 var router = require('express').Router();
 var jwt = require('jwt-simple');
 var Project = require('../models/project');
+var Issue = require('../models/project');
 var _ = require('underscore');
 
 router.get('/', function (req, res, next) {
@@ -38,7 +39,7 @@ router.post('/', function (req, res, next) {
 
     project.save(function (err, project) {
         if (err) return next(err);
-        res.json(201, project);
+        res.status(201).json(project);
     });
 });
 
@@ -64,9 +65,20 @@ router.get('/:projectId', function (req, res, next) {
     });
 });
 
-router.get('/:projectId/issues', function(req, res) {
-    var projectId = req.params.projectId;
-    return res.send('hi ' + projectId);
+router.post('/:projectId/issues/', function (req, res, next) {
+    var issue = new Issue({
+        name: req.body.name
+    });
+
+    Project.findOneAndUpdate(
+        {_id: req.params.projectId},
+        {$push: {issues: issue}},
+        {safe: true, upsert: true},
+        function(err, project) {
+            if (err) return next(err);
+            res.status(201).json(project);
+        }
+    );
 });
 
 module.exports = router;
