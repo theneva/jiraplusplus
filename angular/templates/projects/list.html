@@ -1,4 +1,4 @@
-<div id="projects">
+<div id="projects" ng-controller="ProjectsController">
     <form class="form-horizontal">
         <div class="form-group">
             <label for="inputProjectFilter" class="col-sm-2 control-label">Filter projects</label>
@@ -14,6 +14,7 @@
         <tr>
             <th>Name</th>
             <th>Members</th>
+            <th>Delete</th>
         </tr>
         <tr ng-repeat="project in projects | filter:projectFilter">
             <td>
@@ -25,6 +26,9 @@
                             <span class="btn btn-default member">{{member}}</span>
                         </a>
                 </span>
+            </td>
+            <td>
+                <button class="btn btn-danger" ng-click="deleteProject(project._id)">Delete</button>
             </td>
         </tr>
         </tbody>
