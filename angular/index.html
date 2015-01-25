@@ -12,11 +12,12 @@
             <li><a href="/#/">Home</a></li>
             <li><a href="/#/users">Users</a></li>
             <li><a href="/#/projects">Projects</a></li>
-            <li ng-if="!currentUser"><a href="/#/signup">Sign up</a></li>
-            <li ng-if="!currentUser"><a href="/#/login">Log in</a></li>
         </ul>
         <span class="navbar-text navbar-right" ng-if="currentUser">
             Signed in as <a href="/#/users/{{currentUser.username}}">{{currentUser.username}}</a> | <a ng-click="signout()">Sign out</a>
+        </span>
+        <span class="navbar-text navbar-right" ng-if="!currentUser">
+            <a href="/#/signup">Sign up</a> | <a href="/#/login">Log in</a>
         </span>
     </div>
 </nav>
