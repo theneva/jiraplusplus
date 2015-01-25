@@ -66,13 +66,11 @@ router.get('/:projectId', function (req, res, next) {
 });
 
 router.post('/:projectId/issues/', function (req, res, next) {
-    var issue = new Issue({
-        name: req.body.name
-    });
-
     Project.findOneAndUpdate(
         {_id: req.params.projectId},
-        {$push: {issues: issue}},
+        {$push: {
+            issues: {name: req.body.name}
+        }},
         {safe: true, upsert: true},
         function(err, project) {
             if (err) return next(err);
